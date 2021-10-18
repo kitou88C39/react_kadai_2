@@ -166,7 +166,29 @@ function getStepContent(stepIndex) {
         // </>
       );
     case 1:
-      return "フォーム　2 のコンテンツを表示";
+      return (
+        <FormControl component="fieldset">
+          <FormLabel component="legend">- 現在、生命保険に加入されていますか？ -</FormLabel>
+          <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
+            <FormControlLabel value="yes" control={<Radio />} label="はい" />
+            <FormControlLabel value="no" control={<Radio />} label="いいえ" />
+          </RadioGroup>
+          <FormLabel component="legend">
+            - 現在、入院中ですか。また、3ヶ月以内に医師の診察・検査の結果、入院・手術をすすめられたことがありますか？ -
+          </FormLabel>
+          <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
+            <FormControlLabel value="yes" control={<Radio />} label="はい" />
+            <FormControlLabel value="no" control={<Radio />} label="いいえ" />
+          </RadioGroup>
+          <FormLabel component="legend">
+            - 過去、5年以内に病気やケガで手術を受けたことまたは継続して７日以上の入院をしたことはありますか？ -
+          </FormLabel>
+          <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
+            <FormControlLabel value="yes" control={<Radio />} label="はい" />
+            <FormControlLabel value="no" control={<Radio />} label="いいえ" />
+          </RadioGroup>
+        </FormControl>
+      );
     case 2:
       return (
         <Grid container>
