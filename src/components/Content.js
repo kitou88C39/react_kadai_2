@@ -15,11 +15,50 @@ import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 
+const QUESTIONS = [
+  "現在、生命保険に加入されていますか？",
+  "現在、入院中ですか。また、3ヶ月以内に医師の診察・検査の結果、入院・手術をすすめられたことがありますか？",
+  "過去、5年以内に病気やケガで手術を受けたことまたは継続して７日以上の入院をしたことはありますか？",
+];
+
+const Questionnaire = ({ answers, setAnswers }) => {
+  const handleAnswer = (answeredIndex, answer) => {
+    setAnswers(answers.map((e, i) => (i === answeredIndex ? answer : e)));
+  };
+  return (
+    <div>
+      <FormControl component="fieldset">
+        {answers
+          .filter((_, i) => i === 0 || answers[i - 1])
+          .map((answer, i) => (
+            <React.Fragment key={i}>
+              <FormLabel component="legend">{QUESTIONS[i]}</FormLabel>
+              {answer ? (
+                <Typography>{answer === "yes" ? "はい" : "いいえ"}</Typography>
+              ) : (
+                <RadioGroup
+                  row
+                  aria-label="gender"
+                  name="row-radio-buttons-group"
+                  onChange={(_evt, value) => {
+                    handleAnswer(i, value);
+                  }}
+                >
+                  <FormControlLabel value="yes" control={<Radio />} label="はい" />
+                  <FormControlLabel value="no" control={<Radio />} label="いいえ" />
+                </RadioGroup>
+              )}
+            </React.Fragment>
+          ))}
+      </FormControl>
+    </div>
+  );
+};
 function getSteps() {
   return ["お客様の情報を入力してください", "以下にお答えください", "ご相談ください"];
 }
 
-function getStepContent(stepIndex) {
+const StepContent = ({ stepIndex, questionnaireProps }) => {
   switch (stepIndex) {
     case 0:
       return (
@@ -138,31 +177,7 @@ function getStepContent(stepIndex) {
         </>
       );
     case 1:
-      return (
-        <div>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">現在、生命保険に加入されていますか？</FormLabel>
-            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-              <FormControlLabel value="yes" control={<Radio />} label="はい" />
-              <FormControlLabel value="no" control={<Radio />} label="いいえ" />
-            </RadioGroup>
-            <FormLabel component="legend">
-              現在、入院中ですか。また、3ヶ月以内に医師の診察・検査の結果、入院・手術をすすめられたことがありますか？
-            </FormLabel>
-            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-              <FormControlLabel value="yes" control={<Radio />} label="はい" />
-              <FormControlLabel value="no" control={<Radio />} label="いいえ" />
-            </RadioGroup>
-            <FormLabel component="legend">
-              過去、5年以内に病気やケガで手術を受けたことまたは継続して７日以上の入院をしたことはありますか？
-            </FormLabel>
-            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-              <FormControlLabel value="yes" control={<Radio />} label="はい" />
-              <FormControlLabel value="no" control={<Radio />} label="いいえ" />
-            </RadioGroup>
-          </FormControl>
-        </div>
-      );
+      return <Questionnaire {...questionnaireProps} />;
     case 2:
       return (
         <Grid container>
@@ -185,12 +200,11 @@ function getStepContent(stepIndex) {
     default:
       return "Unknown stepIndex";
   }
-}
-
+};
 function Content() {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [answers, setAnswers] = React.useState(Array(QUESTIONS.length).fill(null));
   const steps = getSteps();
-
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -200,6 +214,7 @@ function Content() {
   const handleReset = () => {
     setActiveStep(0);
   };
+  const buttonDisabled = activeStep === 1 && answers.some((a) => !a);
   return (
     <Grid container>
       <Grid sm={2} />
@@ -218,11 +233,13 @@ function Content() {
           </div>
         ) : (
           <div>
-            <Typography>{getStepContent(activeStep)}</Typography>
+            <Typography>
+              <StepContent stepIndex={activeStep} questionnaireProps={{ answers, setAnswers }} />
+            </Typography>
             <Button disabled={activeStep === 0} onClick={handleBack}>
               戻る
             </Button>
-            <Button variant="contained" color="primary" onClick={handleNext}>
+            <Button variant="contained" color="primary" onClick={handleNext} disabled={buttonDisabled}>
               {activeStep === steps.length - 1 ? "送信" : "次へ"}
             </Button>
           </div>
@@ -231,5 +248,4 @@ function Content() {
     </Grid>
   );
 }
-// }
 export default Content;
