@@ -81,7 +81,7 @@ const StepContent = ({ stepIndex, questionnaireProps }) => {
                 <optgroup label="year">
                   {Array.from(Array(2020), (_, num) => (
                     <option key={num} value={num + 1}>
-                      {num + 1}
+                      {num + 1990}
                     </option>
                   ))}
                 </optgroup>
