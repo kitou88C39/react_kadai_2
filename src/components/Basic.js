@@ -20,7 +20,9 @@ const Basic = () => {
         </FormControl>
       </div>
       <div style={{ textAlign: "center" }}>
+      
         <FormLabel component="legend">- 生年月日 -</FormLabel>
+        
         <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel htmlFor="grouped-native-select">year</InputLabel>
           <Select native defaultValue="" id="grouped-native-select" label="Grouping">

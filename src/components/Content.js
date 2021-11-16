@@ -8,22 +8,27 @@ import Typography from "@mui/material/Typography";
 import Basic from "./Basic";
 import Questionnaire, { QUESTIONS } from "./Questionnaire";
 import Optional from "./Optional";
-import Confirm from "./Confirm";
 
 function getSteps() {
   return ["お客様の情報を入力して下さい", "以下にお答え下さい", "ご相談下さい", "以下の内容をご確認下さい"];
 }
 
-const StepContent = ({ stepIndex, questionnaireProps }) => {
+const StepContent = ({ stepIndex, basicProps, questionnaireProps, optionalProps }) => {
   switch (stepIndex) {
     case 0:
-      return <Basic />;
+      return  <Basic {...basicProps}/>;
     case 1:
       return <Questionnaire {...questionnaireProps} />;
     case 2:
-      return <Optional />;
+      return <Optional {...optionalProps}/>;
     case 3:
-      return <Confirm />;
+      return (
+        <div style={{ textAlign: "center" }}>
+          <Basic {...basicProps}/>
+          <Questionnaire {...questionnaireProps} />
+          <Optional {...optionalProps} />
+        </div>
+      );
     default:
       return "Unknown stepIndex";
   }
@@ -54,7 +59,7 @@ function Content() {
           ))}
         </Stepper>
         {activeStep === steps.length ? (
-          <div>
+          <div style={{ textAlign: "center" }}>
             <Typography>全ステップの表示を完了</Typography>
             <Button onClick={handleReset}>リセット</Button>
           </div>
