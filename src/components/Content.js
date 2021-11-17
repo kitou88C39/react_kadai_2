@@ -16,15 +16,15 @@ function getSteps() {
 const StepContent = ({ stepIndex, basicProps, questionnaireProps, optionalProps }) => {
   switch (stepIndex) {
     case 0:
-      return  <Basic {...basicProps={ basicProfile, setBasicProfile }} />
+      return <Basic {...basicProps} />;
     case 1:
       return <Questionnaire {...questionnaireProps} />;
     case 2:
-      return <Optional {...optionalProps}/>;
+      return <Optional {...optionalProps} />;
     case 3:
       return (
         <div style={{ textAlign: "center" }}>
-          <Basic {...basicProps={ basicProfile, setBasicProfile }} />
+          <Basic {...basicProps} />
           <Questionnaire {...questionnaireProps} />
           <Optional {...optionalProps} />
         </div>
@@ -37,6 +37,7 @@ function Content() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [basicProfile, setBasicProfile] = React.useState({ gender: null, year: null, month: null, day: null });
   const [answers, setAnswers] = React.useState(Array(QUESTIONS.length).fill(null));
+  const [optionalRequest, setOptionalRequest] = React.useState({ request: null });
   const steps = getSteps();
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -67,7 +68,12 @@ function Content() {
         ) : (
           <div>
             <Typography>
-              <StepContent stepIndex={activeStep} questionnaireProps={{ answers, setAnswers }} />
+              <StepContent
+                stepIndex={activeStep}
+                questionnaireProps={{ answers, setAnswers }}
+                basicProps={{ basicProfile, setBasicProfile }}
+                optionalProps={{ optionalRequest, setOptionalRequest }}
+              />
             </Typography>
             <Button disabled={activeStep === 0} onClick={handleBack}>
               戻る
