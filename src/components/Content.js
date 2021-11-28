@@ -10,10 +10,20 @@ import Questionnaire, { QUESTIONS } from "./Questionnaire";
 import Optional from "./Optional";
 
 function getSteps() {
-  return ["お客様の情報を入力して下さい", "以下にお答え下さい", "ご相談下さい", "以下の内容をご確認下さい"];
+  return [
+    "お客様の情報を入力して下さい",
+    "以下にお答え下さい",
+    "ご相談下さい",
+    "以下の内容をご確認下さい",
+  ];
 }
 
-const StepContent = ({ stepIndex, basicProps, questionnaireProps, optionalProps }) => {
+const StepContent = ({
+  stepIndex,
+  basicProps,
+  questionnaireProps,
+  optionalProps,
+}) => {
   switch (stepIndex) {
     case 0:
       return <Basic {...basicProps} />;
@@ -24,9 +34,9 @@ const StepContent = ({ stepIndex, basicProps, questionnaireProps, optionalProps 
     case 3:
       return (
         <div style={{ textAlign: "center" }}>
-          <Basic {...basicProps} />
-          <Questionnaire {...questionnaireProps} />
-          <Optional {...optionalProps} />
+          <Basic isConfirm {...basicProps} />
+          <Questionnaire isConfirm {...questionnaireProps} />
+          <Optional isConfirm {...optionalProps} />
         </div>
       );
     default:
@@ -35,9 +45,18 @@ const StepContent = ({ stepIndex, basicProps, questionnaireProps, optionalProps 
 };
 function Content() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [basicProfile, setBasicProfile] = React.useState({ gender: null, year: null, month: null, day: null });
-  const [answers, setAnswers] = React.useState(Array(QUESTIONS.length).fill(null));
-  const [optionalRequest, setOptionalRequest] = React.useState({ request: null });
+  const [basicProfile, setBasicProfile] = React.useState({
+    gender: null,
+    year: null,
+    month: null,
+    day: null,
+  });
+  const [answers, setAnswers] = React.useState(
+    Array(QUESTIONS.length).fill(null)
+  );
+  const [optionalRequest, setOptionalRequest] = React.useState({
+    request: null,
+  });
   const steps = getSteps();
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -78,7 +97,12 @@ function Content() {
             <Button disabled={activeStep === 0} onClick={handleBack}>
               戻る
             </Button>
-            <Button variant="contained" color="primary" onClick={handleNext} disabled={buttonDisabled}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              disabled={buttonDisabled}
+            >
               {activeStep === steps.length - 1 ? "送信" : "次へ"}
             </Button>
           </div>
